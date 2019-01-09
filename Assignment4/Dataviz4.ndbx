@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ndbx formatVersion="21" type="file" uuid="a6b75291-bce8-41d7-8a6c-974e37cc9bf0">
+    <property name="canvasHeight" value="1000"/>
+    <property name="canvasWidth" value="1000"/>
+    <property name="canvasX" value="0"/>
+    <property name="canvasY" value="0"/>
+    <node name="root" prototype="core.network" renderedChild="translate1">
+        <node name="colorize1" position="3.00,6.00" prototype="corevector.colorize">
+            <port name="fill" type="color" value="#ff0000ff"/>
+        </node>
+        <node name="combine1" position="-1.00,9.00" prototype="list.combine"/>
+        <node name="count1" position="6.00,2.00" prototype="list.count"/>
+        <node name="import_csv1" prototype="data.import_csv">
+            <port name="file" type="string" value="/Users/stijn/DataViz/DataViz/DataViz4/Flight Risk JSON - 93-2014 FINAL.csv"/>
+        </node>
+        <node name="line1" position="8.00,4.00" prototype="corevector.line">
+            <port name="point2" type="point" value="0.00,600.00"/>
+        </node>
+        <node name="lookup1" prototype="data.lookup">
+            <port name="key" type="string" value="airline"/>
+        </node>
+        <node name="lookup2" position="4.00,3.00" prototype="data.lookup">
+            <port name="key" type="string" value="fat"/>
+        </node>
+        <node name="rect1" position="4.00,5.00" prototype="corevector.rect">
+            <port name="height" type="float" value="0.3999999761581421"/>
+            <port name="roundness" type="point" value="0.00,5.00"/>
+        </node>
+        <node name="resample1" position="5.00,7.00" prototype="corevector.resample">
+            <port name="method" type="string" value="amount"/>
+        </node>
+        <node name="textpath1" position="1.00,5.00" prototype="corevector.textpath">
+            <port name="font_size" type="float" value="1.0"/>
+            <port name="align" type="string" value="LEFT"/>
+            <port name="position" type="point" value="-200.00,23.00"/>
+        </node>
+        <node name="translate1" position="3.00,9.00" prototype="corevector.translate"/>
+        <conn input="lookup1.list" output="import_csv1"/>
+        <conn input="lookup2.list" output="import_csv1"/>
+        <conn input="count1.list" output="import_csv1"/>
+        <conn input="resample1.points" output="count1"/>
+        <conn input="resample1.shape" output="line1"/>
+        <conn input="translate1.translate" output="resample1"/>
+        <conn input="translate1.shape" output="combine1"/>
+        <conn input="rect1.width" output="lookup2"/>
+        <conn input="colorize1.shape" output="rect1"/>
+        <conn input="combine1.list1" output="colorize1"/>
+        <conn input="combine1.list2" output="textpath1"/>
+    </node>
+</ndbx>

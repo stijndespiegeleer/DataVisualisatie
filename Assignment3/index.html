@@ -1,127 +1,81 @@
 <!DOCTYPE html>
-<html>
+<meta charset="utf-8">
+<style>
 
-<head></head>
+    body {
+        text-align: center;
+    }
+    .legende{
+        float: left;
+        text-align: left;
+    }
 
+    .legende2{
+        float: right;
+        text-align: left;
+    }
+
+</style>
 <body>
-<div id="pieChart"></div>
-<div>
-    <ul>
-        <li>Christendom: 34</li>
-        <li>Islam: 26</li>
-        <li>Hindoeisme: 17</li>
-        <li>Atheisme: 17</li>
-        <li>Boedisme: 6</li>
-    </ul>
-</div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/4.7.2/d3.min.js"></script>
-<script src="d3pie.min.js"></script>
+<script src="//d3js.org/d3.v3.min.js"></script>
 <script>
-    //Creating new pie chart with d3pie.min.js library
-    var pie = new d3pie("pieChart", {
-        "header": {
-            //Gives the chart a name and discription with some properties for the font
-            "title": {
-                "text": "Religies"
-                , "fontSize": 34
-            }
-            , "subtitle": {
-                "text": "5 grootste religies ter wereld"
-                , "color": "#000000"
-                , "fontSize": 10
-            }
-            , "location": "pie-center"
-            , "titleSubtitlePadding": 10
-        }
-        //size is used for the chart size and it gives a radius
 
-        , "size": {
-            "canvasWidth": 590
-            , "pieInnerRadius": "88%"
-            , "pieOuterRadius": "74%"
-        }
-        //Defining the data
+    //Data is defined in an array
+    var data = [
+        [204,  91, 108, 0.3, 69],
+        [2355, 1635, 982, 684, 510]
+    ];
 
-        , "data": {
-            "sortOrder": "label-desc"
-            , "content": [
-                {
-                    "label": "Christendom"
-                    , "value": 29.6
-                    , "color": "#00047c"
-                }
-                , {
-                    "label": "Islam"
-                    , "value": 22.8
-                    , "color": "#2f3399"
-                }
-                , {
-                    "label": "Hindoeïsme"
-                    , "value": 15
-                    , "color": "#2f52aa"
-                }
-                , {
-                    "label": "Atheïsme"
-                    , "value": 14.3
-                    , "color": "#2e58c9"
-                }
-                , {
-                    "label": "Boedisme"
-                    , "value": 5.1
-                    , "color": "#4d6fcc"
-                }
-            ]
-        }
-        //gives the properties for designing the labels
+    //The radius (r) is defined and the color scale (z) uses category20 to give random colors to the donut chart
+    var
+        r = 300,
+        z = d3.scale.category20();
 
-        , "labels": {
-            "outer": {
-                "format": "percentage"
-                , "pieDistance": 17
-            }
-            , "inner": {
-                "format": "none"
-            }
-            , "mainLabel": {
-                "color": "#2f3399"
-                , "fontSize": 11
-            }
-            , "percentage": {
-                "color": "#2f3399"
-                , "fontSize": 11
-                , "decimalPlaces": 0
-            }
-            , "value": {
-                "color": "#2f3399"
-                , "fontSize": 11
-            }
-            , "truncation": {
-                "enabled": true
-            }
-        }
-        //this is used for some effects for that chart
+    //A SVG element gets inserted for each element in the dataset. The child element (g) translates the
+    //origin to the pie center
+    var svg = d3.select("body").selectAll("svg")
+        .data(data)
+        .enter().append("svg")
+        .attr("width", r  * 2)
+        .attr("height", r  * 2)
+        .append("g")
+        .attr("transform", "translate(" + r  + "," + r  + ")");
 
-        , "effects": {
-            "pullOutSegmentOnClick": {
-                "effect": "linear"
-                , "speed": 400
-                , "size": 8
-            }
-            , "highlightSegmentOnMouseover": false
-            , "highlightLuminosity": -0.66
-        }
-        , "misc": {
-            "colors": {
-                "segmentStroke": "#000000"
-            }
-        }
-        , "callbacks": {
-            "onMouseoverSegment": null
-            , "onMouseoutSegment": null
-            , "onClickSegment": null
-        }
-    });
+    //The data comes from the array that gets passed to d3.layout.pie. This calculates the angles
+    //then these angles are passed to d3.svg.arc. This draws the arcs.
+    svg.selectAll("path")
+        .data(d3.layout.pie())
+        .enter().append("path")
+        .attr("d", d3.svg.arc()
+            .innerRadius(r / 2)
+            .outerRadius(r))
+        .style("fill", function(d, i) { return z(i); });
+
 </script>
-</body>
+<div class="legende">
+    <h2>1800</h2>
+    <ul>
+        <li>Christenen: 204 miljoen</li>
+        <li>Moslims: 91 miljoen</li>
+        <li>Hindoes: 108 miljoen</li>
+        <li>Agnostici: 0.3 miljoen</li>
+        <li>Boedisten: 69 miljoen</li>
+    </ul>
 
-</html>
+    <p>source: <a href="http://christianityinview.com/religion-statistics.html">http://christianityinview.com/religion-statistics.html</a></p>
+
+</div>
+
+<div class="legende2">
+    <h2>2013</h2>
+    <ul>
+        <li>Christenen: 2355 miljoen</li>
+        <li>Moslims: 1635 miljoen</li>
+        <li>Hindoes: 982 miljoen</li>
+        <li>Agnostici: 684 miljoen</li>
+        <li>Boedisten: 510 miljoen</li>
+    </ul>
+
+</div>
+
+</body>
